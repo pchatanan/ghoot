@@ -1,26 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import useFirebaseAuth from './custom-hooks/useFirebaseAuth'
+import {useSelector} from 'react-redux'
+import {BrowserRouter, Route} from 'react-router-dom'
+import AuthRoute from './routes/AuthRoute';
+import NonAuthRoute from './routes/NonAuthRout';
 
-function App() {
+
+const App = props => {
+  const { authLoading, user } = useSelector(state => state.global)
+  useFirebaseAuth()
+  if(authLoading) return <div>Loading...</div>
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      {user ? <AuthRoute/> : <NonAuthRoute/>}
+    </BrowserRouter>
   );
 }
-
 export default App;
