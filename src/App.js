@@ -1,20 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import useFirebaseAuth from './custom-hooks/useFirebaseAuth'
-import {useSelector} from 'react-redux'
-import {BrowserRouter, Route} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { BrowserRouter } from 'react-router-dom'
 import AuthRoute from './routes/AuthRoute';
 import NonAuthRoute from './routes/NonAuthRout';
+import LoadingPage from './components/LoadingPage';
 
 
 const App = props => {
   const { authLoading, user } = useSelector(state => state.global)
   useFirebaseAuth()
-  if(authLoading) return <div>Loading...</div>
+  if (authLoading) return <LoadingPage text={'authenticating'} />
   return (
     <BrowserRouter>
-      {user ? <AuthRoute/> : <NonAuthRoute/>}
+      {user ? <AuthRoute /> : <NonAuthRoute />}
     </BrowserRouter>
   );
 }

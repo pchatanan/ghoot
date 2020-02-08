@@ -2,7 +2,12 @@ import ACTION_TYPES from "../actions";
 
 const defaultState = {
   user: null,
-  authLoading: true
+  authLoading: true,
+  accountStatus: {
+    question: null,
+    gameId: null
+  },
+  statusLoading: true
 }
 
 const global = (state = defaultState, action) => {
@@ -12,6 +17,12 @@ const global = (state = defaultState, action) => {
         ...state,
         user: action.user,
         authLoading: false
+      }
+    case ACTION_TYPES.SET_ACCOUNT_STATUS:
+      return {
+        ...state,
+        accountStatus: action.accountStatus,
+        statusLoading: false
       }
     default:
       return state
