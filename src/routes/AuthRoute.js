@@ -14,6 +14,7 @@ import HosterEndPage from './hoster/HosterEndPage'
 import Menu from '../components/Menu'
 import { MenuContainer, ContentContainer } from '../ui'
 import LoadingPage from '../components/LoadingPage'
+import TopPlayerPage from './hoster/TopPlayerPage'
 
 const AuthRoute = props => {
     const { accountStatus, statusLoading } = useSelector(state => state.global)
@@ -23,7 +24,7 @@ const AuthRoute = props => {
     useAccountStatus()
 
     if (statusLoading) {
-        return <LoadingPage text='loading user status' />
+        return <LoadingPage text='loading user data' />
     }
     if (accountStatus.status === null || accountStatus.status === 'idle') {
         return <>
@@ -49,11 +50,7 @@ const AuthRoute = props => {
         }
         else {
             return <div>
-                <ul>
-                    {topPlayers.map((player, playerIndex) => {
-                        return <li key={playerIndex}>{`${player.name}: ${player.score}`}</li>
-                    })}
-                </ul>
+                <TopPlayerPage/>
                 <HosterQuestionPage question={game.questions[accountStatus.question]} totalQuestion={game.questions.length} />
             </div>
         }

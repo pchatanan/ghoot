@@ -1,13 +1,10 @@
 import React from 'react'
-import { FullscreenDiv, CenterContainer } from '../ui'
+import { GradientFullscreenDiv, CenterContainer } from '../ui'
 import Loading from './Loading'
 import styled from 'styled-components'
 
-const LoadingPageContainer = styled(FullscreenDiv)`
-  position: fixed;
-  background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(109,98,46,1) 34%, rgba(255,233,59,1) 100%);
-  width: 100vw;
-  height: 100vh;
+const LoadingPageContainer = styled(GradientFullscreenDiv)`
+  z-index: 6;
 `
 
 const ContentContainer = styled.div`

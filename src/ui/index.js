@@ -32,8 +32,15 @@ export const ContentContainer = styled.div`
 `
 
 export const FullscreenDiv = styled.div`
+  position: fixed;
   height: 100vh;
-  weight: 100vw;
+  width: 100vw;
+  top: 0;
+  left: 0;
+`
+
+export const GradientFullscreenDiv = styled(FullscreenDiv)`
+  background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(109,98,46,1) 34%, rgba(255,233,59,1) 100%);
 `
 
 export const CenterContainer = styled.div`
@@ -42,3 +49,4 @@ export const CenterContainer = styled.div`
   left: 50%;
   transform: translate(-50%,-50%);
 `
+

@@ -1,6 +1,7 @@
 import React from 'react'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import { GradientFullscreenDiv, CenterContainer, SubHeader, Header } from '../../ui'
 
 const PlayerEndPage = ({ roomId, playerName }) => {
   const [player, setPlayer] = React.useState()
@@ -12,13 +13,15 @@ const PlayerEndPage = ({ roomId, playerName }) => {
       }
     })
   }, [roomId, playerName])
-  return <div>
-    <div>End of the game</div>
-    {player && <div>
-      <div>{`Name: ${player.name}`}</div>
-      <div>{`Score: ${player.score}`}</div>
-    </div>}
-  </div>
+  return <GradientFullscreenDiv>
+    <CenterContainer>
+    <SubHeader>End of the game</SubHeader>
+    {player && <>
+      <Header>{`Name: ${player.name}`}</Header>
+      <Header>{`Score: ${player.score}`}</Header>
+    </>}
+    </CenterContainer>
+  </GradientFullscreenDiv>
 }
 
 export default PlayerEndPage

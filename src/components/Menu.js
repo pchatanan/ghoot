@@ -1,5 +1,5 @@
 import React from 'react'
-import { withRouter, Route } from 'react-router-dom'
+import { withRouter, Route, Switch } from 'react-router-dom'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import IconButton from '../ui/IconButton'
@@ -56,10 +56,10 @@ const CreateMenu = props => {
 }
 
 const Menu = props => {
-  return <>
+  return <Switch>
     <Route exact path='/admin' component={AdminMenu} />
     <Route component={CreateMenu} />
-  </>
+  </Switch>
 }
 
 export default withRouter(Menu)

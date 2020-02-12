@@ -1,46 +1,35 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 
-const ProgressBar = styled.div.attrs(props => {
-  const { seconds, currentSecond } = props
-  const percent = currentSecond * 100 / seconds
-  return {
-    style: {
-      width: `${percent}%`
-    }
+const shrink = keyframes`
+  from {
+    width: 100%;
+    background: LightGreen;
   }
-})`
+  to {
+    width: 0%;
+    background: LightSalmon;
+  }
+`
+
+const ProgressBar = styled.div`
   height: 100%;
-  background red;
+  animation: ${shrink} ${props => `${props.seconds}s`} linear;
 `
 
 const TimeOut = ({ seconds, onTimeOut }) => {
-  const [currentSecond, setCurrentSecond] = React.useState(seconds)
   React.useEffect(() => {
-    var timer = setInterval(() => {
-      setCurrentSecond(preCurrentSecond => {
-        if (preCurrentSecond < 0) {
-          clearTimeout(timer)
-          console.log('current second is zero')
-          onTimeOut()
-          return 0
-        }
-        return preCurrentSecond - 0.01
-      })
-
-    }, 10)
+    var timer = setTimeout(() => {
+      console.log('current second is zero')
+      onTimeOut()
+    }, seconds*1000)
     return () => {
       if (timer) {
         clearTimeout(timer)
       }
     }
-  }, [onTimeOut])
-  if (currentSecond === 0) {
-    return null
-  }
-  return <ProgressBar seconds={seconds} currentSecond={currentSecond}>
-    {Math.round(currentSecond)}
-  </ProgressBar>
+  }, [onTimeOut, seconds])
+  return <ProgressBar seconds={seconds} />
 }
 
 export default TimeOut

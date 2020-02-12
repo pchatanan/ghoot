@@ -3,8 +3,13 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { useSelector } from 'react-redux'
 import Button from '../../ui/Button'
-import { Header } from '../../ui'
+import { Header, GradientFullscreenDiv, SubHeader } from '../../ui'
 import styled from 'styled-components'
+
+const LobbyContainer = styled(GradientFullscreenDiv)`
+  display: flex;
+  flex-direction: column;
+`
 
 const StopButton = styled(Button)`
   background: lightgrey;
@@ -18,6 +23,24 @@ const StartButton = styled(Button)`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+`
+
+const PlayerNameContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  padding: 5px;
+  overflow: auto;
+`
+
+const PlayerName = styled.div`
+  margin: 5px;
+  background: white;
+  box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.4);
+  padding: 10px;
+  radius: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 1.5rem;
 `
 
 const HosterLobbyPage = props => {
@@ -48,7 +71,7 @@ const HosterLobbyPage = props => {
 
   React.useEffect(() => {
     console.log('listen to players in lobby')
-    return firebase.firestore().collection('rooms').doc(accountStatus.roomId).collection('players').onSnapshot(snapshot => {
+    return firebase.firestore().collection('rooms').doc(accountStatus.roomId).collection('players').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
       if (snapshot.empty) {
         console.log('NO players')
       }
@@ -61,7 +84,7 @@ const HosterLobbyPage = props => {
       }
     })
   }, [accountStatus.roomId])
-  return <div>
+  return <LobbyContainer>
     <Header>Waiting for people to join room...</Header>
     <Header>{`Passcode: ${accountStatus.passcode}`}</Header>
     <ButtonContainer>
@@ -83,13 +106,13 @@ const HosterLobbyPage = props => {
       }}>Start</StartButton>
       <StopButton onClick={onEndClick}>Stop</StopButton>
     </ButtonContainer>
-    <h2>{`${players.length} in the room`}</h2>
-    <ul>
+    <SubHeader>{`${players.length} in the room`}</SubHeader>
+    <PlayerNameContainer>
       {players.map((player, playerIndex) => {
-        return <li key={playerIndex}>{player.name}</li>
+        return <PlayerName key={playerIndex}>{player.name}</PlayerName>
       })}
-    </ul>
-  </div>
+    </PlayerNameContainer>
+  </LobbyContainer>
 }
 
 export default HosterLobbyPage

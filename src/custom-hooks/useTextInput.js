@@ -5,7 +5,10 @@ const useTextInput = () => {
   const onChange = React.useCallback(e => {
     setValue(e.target.value)
   }, [setValue])
-  return { value, onChange }
+  const reset = React.useCallback(() => {
+    setValue('')
+  }, [setValue])
+  return { value, onChange, reset }
 }
 
 export default useTextInput

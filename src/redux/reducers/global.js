@@ -7,7 +7,12 @@ const defaultState = {
     question: null,
     gameId: null
   },
-  statusLoading: true
+  statusLoading: true,
+  dialogScreen: {
+    text: null,
+    show: false,
+    onDismiss: null
+  }
 }
 
 const global = (state = defaultState, action) => {
@@ -23,6 +28,26 @@ const global = (state = defaultState, action) => {
         ...state,
         accountStatus: action.accountStatus,
         statusLoading: false
+      }
+    case ACTION_TYPES.SET_DIALOG_SCREEN:
+      return {
+        ...state,
+        dialogScreen: {
+          text: action.text,
+          show: true,
+          onDismiss: action.onDismiss
+        }
+      }
+    case ACTION_TYPES.DISMISS_DIALOG_SCREEN:
+      const {text, onDismiss} = state.dialogScreen
+      onDismiss()
+      return {
+        ...state,
+        dialogScreen: {
+          text,
+          show: false,
+          onDismiss: null
+        }
       }
     default:
       return state

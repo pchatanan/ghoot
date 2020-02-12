@@ -5,6 +5,8 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { useSelector } from 'react-redux'
 import useTextInput from '../custom-hooks/useTextInput'
+import { Header } from '../ui'
+import Button from '../ui/Button'
 
 const CreateGamePage = props => {
   const questions = useArray()
@@ -12,8 +14,8 @@ const CreateGamePage = props => {
   const { user } = useSelector(state => state.global)
   const [submit, setSubmit] = React.useState(false)
   return <div>
-    <h1>Create Game</h1>
-    <button onClick={e => {
+    <Header>Create Game</Header>
+    <Button onClick={e => {
       questions.pushItem({
         text: '',
         option1: '',
@@ -22,8 +24,8 @@ const CreateGamePage = props => {
         option4: '',
         answer: 0
       })
-    }}>Add Question</button>
-    <button onClick={e => {
+    }}>Add Question</Button>
+    <Button onClick={e => {
       setSubmit(true)
       firebase.firestore().collection('users').doc(user.uid).collection('games').add({
         name: gameName.value,
@@ -33,7 +35,7 @@ const CreateGamePage = props => {
           console.log('Game uploaded')
           props.history.push('/admin')
         })
-    }}>{submit ? 'Uploading...' : 'Upload'}</button>
+    }}>{submit ? 'Uploading...' : 'Upload'}</Button>
     <div>
       <label>
         <div>Game Name</div>

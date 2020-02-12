@@ -5,35 +5,15 @@ import 'firebase/firebase-firestore'
 import PlayerLobbyPage from './player/PlayerLobbyPage'
 import PlayerQuestionPage from './player/PlayerQuestionPage'
 import PlayerEndPage from './player/PlayerEndPage'
-import { Header } from '../ui'
-import Input from '../ui/Input'
-import styled from 'styled-components'
-import Button from '../ui/Button'
 import LoadingPage from '../components/LoadingPage'
-
-const HomeInput = styled(Input)`
-    font-size: 1.5rem;
-    font-family: Printable;
-    margin-left: 10px;
-    text-align: center;
-`
-
-const HomeContainer = styled.div`
-    background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(109,98,46,1) 34%, rgba(255,233,59,1) 100%);
-    positon: fixed;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-`
-
-const JoinButton = styled(Button)`
-    font-size: 3rem;
-    margin: 10px;
-`
+import FormTextInput from '../ui/form-items/FormTextInput'
+import { FormButton, FullScreenForm } from '../ui/Form'
+import { GradientFullscreenDiv } from '../ui'
+import {useDispatch} from 'react-redux'
+import { setDialogScreen } from '../redux/actions'
 
 const Home = props => {
+    const dispatch = useDispatch()
     const playerName = useTextInput()
     const passcode = useTextInput()
     const [ownerId, setOwnerId] = React.useState()
@@ -70,6 +50,64 @@ const Home = props => {
 
     }, [ownerId, gameId])
 
+    const onSubmit = React.useCallback(e => {
+        setJoining(true)
+        setJoinStatus('finding room')
+        firebase.firestore().collection('rooms').where('status', '==', 'waiting').where('passcode', '==', passcode.value).get()
+            .then(querySnapshot => {
+                if (querySnapshot.size > 1) {
+                    console.log('there are more than 1 room with this passcode.')
+                    setJoining(false)
+                }
+                else if (querySnapshot.empty) {
+                    console.log('No room with this passcode')
+                    dispatch(setDialogScreen('No room with this passcode', () => {
+                        passcode.reset()
+                        console.log('Dismiss no passcode')
+                    }))
+                    setJoining(false)
+                }
+                else if (querySnapshot.size === 1) {
+                    setJoinStatus('room found')
+                    var retrivedRoomId = null;
+                    var retrivedOwnerId = null;
+                    querySnapshot.forEach(doc => {
+                        retrivedRoomId = doc.id
+                        retrivedOwnerId = doc.data().owner
+                        setRoomId(retrivedRoomId)
+                    })
+                    // Create a reference to the SF doc.
+                    var docRef = firebase.firestore().collection('rooms').doc(retrivedRoomId).collection('players').doc(playerName.value);
+
+                    firebase.firestore().runTransaction((transaction) => {
+                        // This code may get re-run multiple times if there are conflicts.
+                        return transaction.get(docRef).then((playerDoc) => {
+                            if (playerDoc.exists) {
+                                throw new Error("This name already exists!");
+                            }
+                            else {
+                                return transaction.set(docRef, {
+                                    name: playerName.value,
+                                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                                    score: 0
+                                })
+                            }
+                        })
+                    }).then(() => {
+                        setJoinStatus('entering')
+                        console.log("Transaction successfully committed!");
+                        console.log('Player added to the room')
+                        setOwnerId(retrivedOwnerId)
+                        console.log('enter room')
+                    }).catch(function (error) {
+                        console.log("Transaction failed: ", error);
+                        setJoining(false)
+                    });
+                }
+            })
+            e.preventDefault()
+    }, [passcode, playerName.value, dispatch])
+
     if (ownerStatus && ownerStatus.status !== 'idle') {
         if (ownerStatus.status === 'lobby') {
             return <PlayerLobbyPage gameName={game && game.name} />
@@ -84,63 +122,13 @@ const Home = props => {
     else {
         return <>
             {joining && <LoadingPage text={joinStatus} />}
-            <HomeContainer>
-                <Header>Enter your name</Header>
-                <HomeInput {...playerName} />
-                <Header>Input Passcode</Header>
-                <HomeInput {...passcode} />
-                <JoinButton onClick={e => {
-                    setJoining(true)
-                    setJoinStatus('finding room')
-                    firebase.firestore().collection('rooms').where('status', '==', 'waiting').where('passcode', '==', passcode.value).get()
-                        .then(querySnapshot => {
-                            if (querySnapshot.size > 1) {
-                                console.log('there are more than 1 room with this passcode.')
-                                setJoining(false)
-                            }
-                            else if (querySnapshot.empty) {
-                                console.log('No room with this passcode')
-                                setJoining(false)
-                            }
-                            else if (querySnapshot.size === 1) {
-                                setJoinStatus('room found')
-                                var retrivedRoomId = null;
-                                var retrivedOwnerId = null;
-                                querySnapshot.forEach(doc => {
-                                    retrivedRoomId = doc.id
-                                    retrivedOwnerId = doc.data().owner
-                                    setRoomId(retrivedRoomId)
-                                })
-                                // Create a reference to the SF doc.
-                                var docRef = firebase.firestore().collection('rooms').doc(retrivedRoomId).collection('players').doc(playerName.value);
-
-                                firebase.firestore().runTransaction((transaction) => {
-                                    // This code may get re-run multiple times if there are conflicts.
-                                    return transaction.get(docRef).then((playerDoc) => {
-                                        if (playerDoc.exists) {
-                                            throw new Error("This name already exists!");
-                                        }
-                                        else {
-                                            return transaction.set(docRef, {
-                                                name: playerName.value,
-                                                score: 0
-                                            })
-                                        }
-                                    })
-                                }).then(() => {
-                                    setJoinStatus('entering')
-                                    console.log("Transaction successfully committed!");
-                                    console.log('Player added to the room')
-                                    setOwnerId(retrivedOwnerId)
-                                    console.log('enter room')
-                                }).catch(function (error) {
-                                    console.log("Transaction failed: ", error);
-                                    setJoining(false)
-                                });
-                            }
-                        })
-                }}>Join</JoinButton>
-            </HomeContainer>
+            <GradientFullscreenDiv>
+            <FullScreenForm onSubmit={onSubmit}>
+                <FormTextInput label='Name' {...playerName} />
+                <FormTextInput label='Passcode' {...passcode} />
+                <FormButton type='submit'>Join</FormButton>
+            </FullScreenForm>
+            </GradientFullscreenDiv>
         </>
     }
 }

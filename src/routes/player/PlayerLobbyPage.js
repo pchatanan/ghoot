@@ -1,11 +1,13 @@
 import React from 'react'
-import { Header, SubHeader } from '../../ui'
+import { Header, SubHeader, GradientFullscreenDiv, CenterContainer } from '../../ui'
 
 const PlayerLobbyPage = props => {
-  return <div>
-    <Header>{props.gameName}</Header>
-    <SubHeader>Welcome to the lobby, waiting for other players..</SubHeader>
-  </div>
+  return <GradientFullscreenDiv>
+    <CenterContainer>
+      <Header>{props.gameName}</Header>
+      <SubHeader>Welcome to the lobby, waiting for other players..</SubHeader>
+    </CenterContainer>
+  </GradientFullscreenDiv>
 }
 
 export default PlayerLobbyPage
