@@ -1,14 +1,13 @@
 import React from 'react'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
 import { useSelector } from 'react-redux'
+import { fs } from '..'
 
 const useGames = () => {
   const [games, setGames] = React.useState([])
   const { user } = useSelector(state => state.global)
   React.useEffect(() => {
     console.log('useGames')
-    firebase.firestore().collection('users').doc(user.uid).collection('games').onSnapshot(snapshot => {
+    fs.collection('users').doc(user.uid).collection('games').onSnapshot(snapshot => {
       if (!snapshot.empty) {
         var temp = []
         snapshot.forEach(doc => {

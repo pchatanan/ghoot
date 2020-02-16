@@ -4,6 +4,7 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import styled from 'styled-components'
 import { GradientFullscreenDiv, Header, CenterContainer, SubHeader } from '../../ui'
+import { fs } from '../..'
 
 const GridLayout = styled.div`
   width: 100vw;
@@ -48,7 +49,6 @@ const Option4 = styled.div`
 
 
 const PlayerQuestionPage = ({ question, playerName, questionIndex, roomId }) => {
-  const fs = firebase.firestore()
   const roomRef = fs.collection('rooms').doc(roomId)
   const answerRef = roomRef.collection(questionIndex.toString()).doc(playerName)
   const scoreRef = roomRef.collection('players').doc(playerName)

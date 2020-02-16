@@ -1,7 +1,6 @@
 import React from 'react'
-import firebase from 'firebase/app'
-import 'firebase/firestore'
 import { useSelector } from 'react-redux'
+import { fs } from '..'
 
 const useGame = (gameId) => {
   const { user } = useSelector(state => state.global)
@@ -10,7 +9,7 @@ const useGame = (gameId) => {
   React.useEffect(() => {
     if (gameId) {
       console.log('get game')
-      firebase.firestore().collection('users').doc(user.uid).collection('games').doc(gameId).get()
+      fs.collection('users').doc(user.uid).collection('games').doc(gameId).get()
         .then(gameDoc => {
           setGame(gameDoc.data())
         })
