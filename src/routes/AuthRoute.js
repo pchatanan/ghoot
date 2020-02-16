@@ -5,7 +5,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import CreateGamePage from './CreateGamePage'
 import useAccountStatus from '../custom-hooks/useAccountStatus'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import HosterLobbyPage from './hoster/HosterLobbyPage'
 import HosterQuestionPage from './hoster/HosterQuestionPage'
 import useGame from '../custom-hooks/useGame'
@@ -13,18 +13,19 @@ import useTopPlayers from '../custom-hooks/useTopPlayers'
 import HosterEndPage from './hoster/HosterEndPage'
 import Menu from '../components/Menu'
 import { MenuContainer, ContentContainer } from '../ui'
-import LoadingPage from '../components/LoadingPage'
 import TopPlayerPage from './hoster/TopPlayerPage'
+import { setLoadingScreen, dismissLoadingScreen } from '../redux/actions'
 
 const AuthRoute = props => {
-    const { accountStatus, statusLoading } = useSelector(state => state.global)
+    const { accountStatus, statusLoading, loadingScreen } = useSelector(state => state.global)
+    const dispatch = useDispatch()
     const game = useGame(accountStatus.gameId)
     const topPlayers = useTopPlayers(accountStatus && accountStatus.roomId, 10)
     console.log(topPlayers)
     useAccountStatus()
 
     if (statusLoading) {
-        return <LoadingPage text='loading user data' />
+        return <></>
     }
     if (accountStatus.status === null || accountStatus.status === 'idle') {
         return <>
@@ -38,9 +39,13 @@ const AuthRoute = props => {
         </>
     }
     if (accountStatus.status === 'create_room') {
-        return <LoadingPage text='creating room' />
+        if(!loadingScreen.show){
+            dispatch(setLoadingScreen('creating room'))
+        }
+        return <></>
     }
     if (accountStatus.status === 'lobby') {
+        if(loadingScreen.show) dispatch(dismissLoadingScreen())
         return <HosterLobbyPage />
     }
     if (accountStatus.status === 'question') {

@@ -1,5 +1,5 @@
 import React from 'react'
-import Home from './Home'
+import Home from './player/Home'
 import { Route, Switch } from 'react-router-dom'
 import LoginPage from './LoginPage'
 

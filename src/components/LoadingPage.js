@@ -4,7 +4,8 @@ import Loading from './Loading'
 import styled from 'styled-components'
 
 const LoadingPageContainer = styled(GradientFullscreenDiv)`
-  z-index: 6;
+  z-index: 12;
+  display: ${props => props.show ? 'block' : 'none'};
 `
 
 const ContentContainer = styled.div`
@@ -17,8 +18,8 @@ const TextContainer = styled.div`
   font-size: 2rem;
 `
 
-const LoadingPage = ({ text }) => {
-  return <LoadingPageContainer>
+const LoadingPage = ({ text, show }) => {
+  return <LoadingPageContainer show={show}>
     <CenterContainer>
       <ContentContainer>
         <Loading />

@@ -5,17 +5,17 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import AuthRoute from './routes/AuthRoute';
 import NonAuthRoute from './routes/NonAuthRout';
-import LoadingPage from './components/LoadingPage';
 import DialogScreen from './ui/popup/DialogScreen';
+import LoadingScreen from './ui/popup/LoadingScreen';
 
 
 const App = props => {
-  const { authLoading, user } = useSelector(state => state.global)
+  const { user } = useSelector(state => state.global)
   useFirebaseAuth()
-  if (authLoading) return <LoadingPage text={'authenticating'} />
   return (
     <BrowserRouter>
       <DialogScreen/>
+      <LoadingScreen/>
       {user ? <AuthRoute /> : <NonAuthRoute />}
     </BrowserRouter>
   );

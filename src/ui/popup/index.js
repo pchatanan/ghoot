@@ -8,7 +8,7 @@ const TransparentScreen = styled.div`
     height: 100vh;
     z-index: 10;
     backdrop-filter: blur(16px);
-    display: ${props => props.show ? 'block' : 'none'}
+    display: ${props => props.show ? 'block' : 'none'};
 `
 
 const DialogContainer = styled.div`

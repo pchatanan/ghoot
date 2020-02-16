@@ -19,6 +19,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
+const fs = firebase.firestore()
+
 ReactDOM.render(<Provider store={store}>
   <App />
 </Provider>, document.getElementById('root'));
@@ -27,3 +29,5 @@ ReactDOM.render(<Provider store={store}>
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
+
+export {fs}
