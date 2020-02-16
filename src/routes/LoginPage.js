@@ -5,8 +5,11 @@ import 'firebase/auth'
 import {GradientFullscreenDiv} from '../ui'
 import {FullScreenForm, FormButton} from '../ui/Form'
 import FormTextInput from '../ui/form-items/FormTextInput'
+import {useDispatch} from 'react-redux'
+import { setDialogScreen } from '../redux/actions'
 
 const LoginPage = propr => {
+  const dispatch = useDispatch()
   const email = useTextInput()
   const password = useTextInput()
   const [submit, setSubmit] = React.useState(false)
@@ -17,6 +20,9 @@ const LoginPage = propr => {
         .then(userCredential => {
         })
         .catch(error => {
+          dispatch(setDialogScreen(error.message, () => {
+            setSubmit(false)
+          }))
         })
       e.preventDefault()
     }}>

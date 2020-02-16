@@ -13,7 +13,6 @@ import useTopPlayers from '../custom-hooks/useTopPlayers'
 import HosterEndPage from './hoster/HosterEndPage'
 import Menu from '../components/Menu'
 import { MenuContainer, ContentContainer } from '../ui'
-import TopPlayerPage from './hoster/TopPlayerPage'
 import { setLoadingScreen, dismissLoadingScreen } from '../redux/actions'
 
 const AuthRoute = props => {
@@ -54,10 +53,7 @@ const AuthRoute = props => {
             return <div>Loading game...</div>
         }
         else {
-            return <div>
-                <TopPlayerPage/>
-                <HosterQuestionPage question={game.questions[accountStatus.question]} totalQuestion={game.questions.length} />
-            </div>
+            return <HosterQuestionPage question={game.questions[accountStatus.question]} totalQuestion={game.questions.length} />
         }
 
     }

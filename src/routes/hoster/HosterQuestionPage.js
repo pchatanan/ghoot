@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { SubHeader, CenterContainer } from '../../ui'
 import Button from '../../ui/Button'
+import TopPlayerPage from './TopPlayerPage'
 
 const GridLayout = styled.div`
   width: 100vw;
@@ -134,7 +135,9 @@ const HosterQuestionPage = ({ question, totalQuestion }) => {
     });
   }, [accountStatus.roomId, accountStatus.question, question.answer])
 
-  return <GridLayout>
+  return <>
+  <TopPlayerPage />
+  <GridLayout>
     <CountdownDiv>
     {!showNext && <TimeOut seconds={10} onTimeOut={onTimeOut} />}
     {showNext && <Button onClick={isLastQuestion ? onEndClick : onNextClick}>{isLastQuestion ? 'End game' : 'Next'}</Button>}
@@ -176,6 +179,7 @@ const HosterQuestionPage = ({ question, totalQuestion }) => {
     </Option4>
     
   </GridLayout>
+  </>
 }
 
 export default HosterQuestionPage

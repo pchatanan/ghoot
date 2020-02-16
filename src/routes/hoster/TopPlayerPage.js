@@ -28,6 +28,7 @@ const TopPlayerPage = props => {
     const [show, setShow] = React.useState(false)
     const { accountStatus } = useSelector(state => state.global)
     const topPlayers = useTopPlayers(accountStatus && accountStatus.roomId, 10)
+    
     return <>
     <ToggleButton onClick={e => {setShow(preShow => !preShow)}}>
         {show ? 'Hide leader broad' : 'Show leader broad'}

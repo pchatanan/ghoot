@@ -29,7 +29,8 @@ const CreateGamePage = props => {
       setSubmit(true)
       firebase.firestore().collection('users').doc(user.uid).collection('games').add({
         name: gameName.value,
-        questions: questions.values
+        questions: questions.values,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       })
         .then(() => {
           console.log('Game uploaded')
